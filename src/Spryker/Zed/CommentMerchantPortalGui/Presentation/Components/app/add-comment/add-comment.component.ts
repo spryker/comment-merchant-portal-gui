@@ -17,6 +17,7 @@ export interface AddComment {
 }
 
 @Component({
+    standalone: false,
     selector: 'mp-add-comment',
     templateUrl: './add-comment.component.html',
     styleUrls: ['./add-comment.component.less'],
@@ -25,7 +26,10 @@ export interface AddComment {
     host: { class: 'mp-add-comment' },
 })
 export class AddCommentComponent {
-    constructor(private commentsConfigurator: CommentsConfiguratorService, private injector: Injector) {}
+    constructor(
+        private commentsConfigurator: CommentsConfiguratorService,
+        private injector: Injector,
+    ) {}
 
     @Input() addComment: AddComment;
     @Input() addUrl: string;

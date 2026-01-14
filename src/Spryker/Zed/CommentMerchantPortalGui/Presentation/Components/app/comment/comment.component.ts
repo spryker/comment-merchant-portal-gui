@@ -21,6 +21,7 @@ export type CommentTranslations = {
 } & { updated: string };
 
 @Component({
+    standalone: false,
     selector: 'mp-comment',
     templateUrl: './comment.component.html',
     styleUrls: ['./comment.component.less'],
@@ -31,7 +32,10 @@ export type CommentTranslations = {
     },
 })
 export class CommentComponent {
-    constructor(private commentsConfigurator: CommentsConfiguratorService, private injector: Injector) {}
+    constructor(
+        private commentsConfigurator: CommentsConfiguratorService,
+        private injector: Injector,
+    ) {}
 
     @Input() comment: Comment = {} as Comment;
     @Input() translations: CommentTranslations;

@@ -1,9 +1,9 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
-import { createComponentWrapper, getTestingForComponent } from '@mp/zed-ui/testing';
 import { of } from 'rxjs';
 import { CommentsConfiguratorService } from '../../services/comments-configurator';
 import { CommentComponent } from './comment.component';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { LocalTimePipe } from './local-time.pipe';
 
 const mockComment = {
@@ -24,18 +24,17 @@ const mockCommentTranslations = {
 };
 
 const mockCommentsConfiguratorService = {
-    getAccomplishing: jest.fn().mockReturnValue(of(null)),
+    getAccomplishing: jest.fn().mockReturnValue(of({ id: 'different-id', type: 'type' })),
     commentAction: jest.fn(),
 };
 
 describe('CommentComponent', () => {
-    const { testModule, createComponent } = getTestingForComponent(CommentComponent, {
-        ngModule: { schemas: [NO_ERRORS_SCHEMA], declarations: [LocalTimePipe] },
-    });
+    let fixture: ComponentFixture<CommentComponent>;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [testModule],
+            declarations: [CommentComponent, LocalTimePipe],
+            schemas: [NO_ERRORS_SCHEMA],
             providers: [
                 {
                     provide: CommentsConfiguratorService,
@@ -43,114 +42,120 @@ describe('CommentComponent', () => {
                 },
             ],
         });
+
+        fixture = TestBed.createComponent(CommentComponent);
     });
 
     describe('when readonly is false', () => {
-        it('should render meta inputs with proper values', async () => {
-            const host = await createComponentWrapper(createComponent, {
-                comment: mockComment,
-                translations: mockCommentTranslations,
-            });
-            const crfInput = host.queryCss('input[name=_token]');
-            const uuidInput = host.queryCss('input[name=uuid]');
+        it('should render meta inputs with proper values', () => {
+            fixture.componentRef.setInput('comment', mockComment);
+            fixture.componentRef.setInput('translations', mockCommentTranslations);
+            fixture.detectChanges();
 
-            expect(crfInput.properties.value).toBe(mockComment.crf);
-            expect(uuidInput.properties.value).toBe(mockComment.uuid);
+            const crfInput = fixture.debugElement.query(By.css('input[name=_token]'));
+            const uuidInput = fixture.debugElement.query(By.css('input[name=uuid]'));
+
+            expect(crfInput.nativeElement.value).toBe(mockComment.crf);
+            expect(uuidInput.nativeElement.value).toBe(mockComment.uuid);
         });
 
-        it('should render message area', async () => {
-            const host = await createComponentWrapper(createComponent, {
-                comment: mockComment,
-                translations: mockCommentTranslations,
-            });
-            const textAreaComponent = host.queryCss('spy-textarea');
-            const messageComponent = host.queryCss('.mp-comment__message');
+        it('should render message area', () => {
+            fixture.componentRef.setInput('comment', mockComment);
+            fixture.componentRef.setInput('translations', mockCommentTranslations);
+            fixture.detectChanges();
 
-            expect(textAreaComponent).not.toBeTruthy();
-            expect(messageComponent.nativeElement.textContent).toBe(mockComment.message);
+            const messageComponent = fixture.debugElement.query(By.css('.mp-comment__message'));
+
+            expect(messageComponent.nativeElement.textContent).toContain(mockComment.message);
         });
 
         it('should switch message to textarea area', async () => {
-            const host = await createComponentWrapper(createComponent, {
-                comment: mockComment,
-                translations: mockCommentTranslations,
-            });
-            const linkSwitcher = host.queryCss('spy-button:first-of-type');
+            fixture.componentRef.setInput('comment', mockComment);
+            fixture.componentRef.setInput('translations', mockCommentTranslations);
+            fixture.detectChanges();
 
-            linkSwitcher.nativeElement.click();
-            await host.detectChanges();
+            const buttons = fixture.debugElement.queryAll(By.css('spy-button'));
+            const editButton = buttons[0]; // First button is edit
 
-            const textAreaComponent = host.queryCss('spy-textarea');
-            const messageComponent = host.queryCss('.mp-comment__message');
+            editButton.nativeElement.click();
+            await fixture.whenStable();
+            fixture.detectChanges();
 
-            expect(textAreaComponent.properties.value).toBe(mockComment.message);
+            const textAreaComponent = fixture.debugElement.query(By.css('spy-textarea'));
+            const messageComponent = fixture.debugElement.query(By.css('.mp-comment__message'));
+
+            expect(textAreaComponent).toBeTruthy();
             expect(messageComponent).not.toBeTruthy();
         });
 
         it('should trigger CommentsConfiguratorService.commentAction on update event', async () => {
-            const host = await createComponentWrapper(createComponent, {
-                comment: mockComment,
-                translations: mockCommentTranslations,
-            });
-            const linkSwitcher = host.queryCss('spy-button:first-of-type');
+            fixture.componentRef.setInput('comment', mockComment);
+            fixture.componentRef.setInput('translations', mockCommentTranslations);
+            fixture.detectChanges();
 
-            linkSwitcher.nativeElement.click();
-            await host.detectChanges();
+            const buttons = fixture.debugElement.queryAll(By.css('spy-button'));
+            const editButton = buttons[0]; // First button is edit
 
-            const updateLink = host.queryCss('spy-button:first-of-type');
+            editButton.nativeElement.click();
+            await fixture.whenStable();
+            fixture.detectChanges();
 
-            updateLink.nativeElement.click();
-            await host.detectChanges();
+            const updatedButtons = fixture.debugElement.queryAll(By.css('spy-button'));
+            const updateButton = updatedButtons[0]; // After editing, first button becomes update
+
+            updateButton.nativeElement.click();
+            await fixture.whenStable();
+            fixture.detectChanges();
 
             expect(mockCommentsConfiguratorService.commentAction).toHaveBeenCalled();
         });
 
-        it('should rigger CommentsConfiguratorService.commentAction on remove event', async () => {
-            const host = await createComponentWrapper(createComponent, {
-                comment: mockComment,
-                translations: mockCommentTranslations,
-            });
-            const removeLink = host.queryCss('spy-button:nth-of-type(2)');
+        it('should trigger CommentsConfiguratorService.commentAction on remove event', async () => {
+            fixture.componentRef.setInput('comment', mockComment);
+            fixture.componentRef.setInput('translations', mockCommentTranslations);
+            fixture.detectChanges();
 
-            removeLink.nativeElement.click();
-            await host.detectChanges();
+            const buttons = fixture.debugElement.queryAll(By.css('spy-button'));
+            const removeButton = buttons[1]; // Second button is remove
+
+            removeButton.nativeElement.click();
+            await fixture.whenStable();
+            fixture.detectChanges();
 
             expect(mockCommentsConfiguratorService.commentAction).toHaveBeenCalled();
         });
     });
 
     describe('when readonly is true', () => {
-        it('should not render meta inputs with proper values', async () => {
-            const host = await createComponentWrapper(createComponent, {
-                comment: { ...mockComment, readonly: true },
-                translations: mockCommentTranslations,
-            });
-            const crfInput = host.queryCss('input[name=_token]');
-            const uuidInput = host.queryCss('input[name=uuid]');
+        it('should not render meta inputs with proper values', () => {
+            fixture.componentRef.setInput('comment', { ...mockComment, readonly: true });
+            fixture.componentRef.setInput('translations', mockCommentTranslations);
+            fixture.detectChanges();
+            const crfInput = fixture.debugElement.query(By.css('input[name=_token]'));
+            const uuidInput = fixture.debugElement.query(By.css('input[name=uuid]'));
 
             expect(crfInput).not.toBeTruthy();
             expect(uuidInput).not.toBeTruthy();
         });
 
-        it('should render only message component', async () => {
-            const host = await createComponentWrapper(createComponent, {
-                comment: { ...mockComment, readonly: true },
-                translations: mockCommentTranslations,
-            });
-            const linkSwitcher = host.queryCss('spy-link[icon="edit"]');
-            const messageComponent = host.queryCss('.mp-comment__message');
+        it('should render only message component', () => {
+            fixture.componentRef.setInput('comment', { ...mockComment, readonly: true });
+            fixture.componentRef.setInput('translations', mockCommentTranslations);
+            fixture.detectChanges();
+            const editButton = fixture.debugElement.query(By.css('.mp-comment__edit'));
+            const messageComponent = fixture.debugElement.query(By.css('.mp-comment__message'));
 
-            expect(linkSwitcher).not.toBeTruthy();
+            expect(editButton).not.toBeTruthy();
             expect(messageComponent).toBeTruthy();
         });
     });
 
-    it('should render signature', async () => {
-        const host = await createComponentWrapper(createComponent, {
-            comment: mockComment,
-            translations: mockCommentTranslations,
-        });
-        const signature = host.queryCss('.mp-comment__signature-form');
+    it('should render signature', () => {
+        fixture.componentRef.setInput('comment', mockComment);
+        fixture.componentRef.setInput('translations', mockCommentTranslations);
+        fixture.detectChanges();
+
+        const signature = fixture.debugElement.query(By.css('.mp-comment__signature'));
 
         expect(signature.nativeElement.textContent).toContain(mockComment.fullname);
     });

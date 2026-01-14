@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges, ViewEncapsulation } from '@angular/core';
-import { ToJson } from '@spryker/utils';
+import { jsonAttribute } from '@spryker/utils';
 import { Comment, CommentsConfiguratorService } from '../../services/comments-configurator';
 import { AddComment } from '../add-comment/add-comment.component';
 import { CommentActions, CommentTranslations } from '../comment/comment.component';
@@ -18,6 +18,7 @@ interface Translations {
 }
 
 @Component({
+    standalone: false,
     selector: 'mp-comments-thread',
     templateUrl: './comments-thread.component.html',
     styleUrls: ['./comments-thread.component.less'],
@@ -27,10 +28,10 @@ interface Translations {
 export class CommentsThreadComponent implements OnChanges {
     constructor(private commentsConfigurator: CommentsConfiguratorService) {}
 
-    @Input() @ToJson() comments: Comment[] = [];
-    @Input() @ToJson() actions: ThreadActions;
-    @Input() @ToJson() add: AddComment;
-    @Input() @ToJson() translations: Translations;
+    @Input({ transform: jsonAttribute }) comments: Comment[] = [];
+    @Input({ transform: jsonAttribute }) actions: ThreadActions;
+    @Input({ transform: jsonAttribute }) add: AddComment;
+    @Input({ transform: jsonAttribute }) translations: Translations;
 
     comments$ = this.commentsConfigurator.getComments();
     error$ = this.commentsConfigurator.getError();

@@ -2,6 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
     name: 'localTime',
+    standalone: false,
 })
 export class LocalTimePipe implements PipeTransform {
     transform(utcTimeString: string): string {

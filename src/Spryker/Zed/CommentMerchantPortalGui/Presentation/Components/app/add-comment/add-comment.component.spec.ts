@@ -1,6 +1,6 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
-import { createComponentWrapper, getTestingForComponent } from '@mp/zed-ui/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { of } from 'rxjs';
 import { CommentsConfiguratorService } from '../../services/comments-configurator';
 import { AddCommentComponent } from './add-comment.component';
@@ -12,19 +12,18 @@ const mockAddComment = {
 };
 
 const mockCommentsConfiguratorService = {
-    getAccomplishing: jest.fn().mockReturnValue(of(null)),
+    getAccomplishing: jest.fn().mockReturnValue(of({ type: 'type' })),
     getError: jest.fn().mockReturnValue(of(null)),
     commentAction: jest.fn(),
 };
 
 describe('AddCommentComponent', () => {
-    const { testModule, createComponent } = getTestingForComponent(AddCommentComponent, {
-        ngModule: { schemas: [NO_ERRORS_SCHEMA] },
-    });
+    let fixture: ComponentFixture<AddCommentComponent>;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [testModule],
+            declarations: [AddCommentComponent],
+            schemas: [NO_ERRORS_SCHEMA],
             providers: [
                 {
                     provide: CommentsConfiguratorService,
@@ -32,32 +31,37 @@ describe('AddCommentComponent', () => {
                 },
             ],
         });
+
+        fixture = TestBed.createComponent(AddCommentComponent);
     });
 
-    it('should render <spy-textarea> component', async () => {
-        const host = await createComponentWrapper(createComponent, { addComment: mockAddComment });
-        const textAreaComponent = host.queryCss('spy-textarea');
+    it('should render <spy-textarea> component', () => {
+        fixture.componentRef.setInput('addComment', mockAddComment);
+        fixture.detectChanges();
+        const textAreaComponent = fixture.debugElement.query(By.css('spy-textarea'));
 
         expect(textAreaComponent).toBeTruthy();
     });
 
-    it('should render meta inputs with proper values', async () => {
-        const host = await createComponentWrapper(createComponent, { addComment: mockAddComment });
-        const crfInput = host.queryCss('input[name=_token]');
-        const idInput = host.queryCss('input[name=ownerId]');
-        const typeInput = host.queryCss('input[name=ownerType]');
+    it('should render meta inputs with proper values', () => {
+        fixture.componentRef.setInput('addComment', mockAddComment);
+        fixture.detectChanges();
+        const crfInput = fixture.debugElement.query(By.css('input[name=_token]'));
+        const idInput = fixture.debugElement.query(By.css('input[name=ownerId]'));
+        const typeInput = fixture.debugElement.query(By.css('input[name=ownerType]'));
 
-        expect(crfInput.properties.value).toBe(mockAddComment.crf);
-        expect(idInput.properties.value).toBe(mockAddComment.ownerId);
-        expect(typeInput.properties.value).toBe(mockAddComment.ownerType);
+        expect(crfInput.nativeElement.value).toBe(mockAddComment.crf);
+        expect(idInput.nativeElement.value).toBe(mockAddComment.ownerId);
+        expect(typeInput.nativeElement.value).toBe(mockAddComment.ownerType);
     });
 
-    it('should trigger CommentsConfiguratorService.commentAction', async () => {
-        const host = await createComponentWrapper(createComponent, { addComment: mockAddComment });
-        const buttonComponent = host.queryCss('spy-button');
+    it('should trigger CommentsConfiguratorService.commentAction', () => {
+        fixture.componentRef.setInput('addComment', mockAddComment);
+        fixture.detectChanges();
+        const buttonComponent = fixture.debugElement.query(By.css('spy-button'));
 
         buttonComponent.nativeElement.click();
-        host.detectChanges();
+        fixture.detectChanges();
 
         expect(mockCommentsConfiguratorService.commentAction).toHaveBeenCalled();
     });
