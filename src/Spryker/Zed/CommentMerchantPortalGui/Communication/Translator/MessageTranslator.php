@@ -17,9 +17,6 @@ class MessageTranslator implements MessageTranslatorInterface
      */
     protected CommentMerchantPortalGuiToTranslatorFacadeInterface $translatorFacade;
 
-    /**
-     * @param \Spryker\Zed\CommentMerchantPortalGui\Dependency\Facade\CommentMerchantPortalGuiToTranslatorFacadeInterface $translatorFacade
-     */
     public function __construct(CommentMerchantPortalGuiToTranslatorFacadeInterface $translatorFacade)
     {
         $this->translatorFacade = $translatorFacade;

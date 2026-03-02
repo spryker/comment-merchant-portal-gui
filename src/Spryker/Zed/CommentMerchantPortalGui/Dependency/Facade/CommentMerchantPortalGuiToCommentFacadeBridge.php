@@ -25,31 +25,16 @@ class CommentMerchantPortalGuiToCommentFacadeBridge implements CommentMerchantPo
         $this->commentFacade = $commentFacade;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\CommentRequestTransfer $commentRequestTransfer
-     *
-     * @return \Generated\Shared\Transfer\CommentThreadResponseTransfer
-     */
     public function addComment(CommentRequestTransfer $commentRequestTransfer): CommentThreadResponseTransfer
     {
         return $this->commentFacade->addComment($commentRequestTransfer);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\CommentRequestTransfer $commentRequestTransfer
-     *
-     * @return \Generated\Shared\Transfer\CommentThreadResponseTransfer
-     */
     public function updateComment(CommentRequestTransfer $commentRequestTransfer): CommentThreadResponseTransfer
     {
         return $this->commentFacade->updateComment($commentRequestTransfer);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\CommentRequestTransfer $commentRequestTransfer
-     *
-     * @return \Generated\Shared\Transfer\CommentThreadResponseTransfer
-     */
     public function removeComment(CommentRequestTransfer $commentRequestTransfer): CommentThreadResponseTransfer
     {
         return $this->commentFacade->removeComment($commentRequestTransfer);

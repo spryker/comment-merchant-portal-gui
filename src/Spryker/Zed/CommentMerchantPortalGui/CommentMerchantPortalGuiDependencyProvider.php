@@ -40,11 +40,6 @@ class CommentMerchantPortalGuiDependencyProvider extends AbstractBundleDependenc
      */
     public const SERVICE_FORM_CSRF_PROVIDER = 'form.csrf_provider';
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     public function provideCommunicationLayerDependencies(Container $container): Container
     {
         $container = parent::provideCommunicationLayerDependencies($container);
@@ -56,11 +51,6 @@ class CommentMerchantPortalGuiDependencyProvider extends AbstractBundleDependenc
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addCommentFacade(Container $container): Container
     {
         $container->set(static::FACADE_COMMENT, function (Container $container) {
@@ -70,11 +60,6 @@ class CommentMerchantPortalGuiDependencyProvider extends AbstractBundleDependenc
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addMerchantUserFacade(Container $container): Container
     {
         $container->set(static::FACADE_MERCHANT_USER, function (Container $container) {
@@ -86,11 +71,6 @@ class CommentMerchantPortalGuiDependencyProvider extends AbstractBundleDependenc
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addTranslatorFacade(Container $container): Container
     {
         $container->set(static::FACADE_TRANSLATOR, function (Container $container) {
@@ -102,11 +82,6 @@ class CommentMerchantPortalGuiDependencyProvider extends AbstractBundleDependenc
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addFormCsrfProviderService(Container $container): Container
     {
         $container->set(static::SERVICE_FORM_CSRF_PROVIDER, function (Container $container) {

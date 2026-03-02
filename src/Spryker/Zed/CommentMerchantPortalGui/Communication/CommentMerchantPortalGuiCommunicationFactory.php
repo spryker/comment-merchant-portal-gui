@@ -23,49 +23,31 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
  */
 class CommentMerchantPortalGuiCommunicationFactory extends AbstractCommunicationFactory
 {
-    /**
-     * @return \Spryker\Zed\CommentMerchantPortalGui\Communication\Validator\CsrfTokenValidatorInterface
-     */
     public function createCsrfTokenValidator(): CsrfTokenValidatorInterface
     {
         return new CsrfTokenValidator($this->getCsrfTokenManager());
     }
 
-    /**
-     * @return \Spryker\Zed\CommentMerchantPortalGui\Communication\Translator\MessageTranslatorInterface
-     */
     public function createMessageTranslator(): MessageTranslatorInterface
     {
         return new MessageTranslator($this->getTranslatorFacade());
     }
 
-    /**
-     * @return \Spryker\Zed\CommentMerchantPortalGui\Dependency\Facade\CommentMerchantPortalGuiToCommentFacadeInterface
-     */
     public function getCommentFacade(): CommentMerchantPortalGuiToCommentFacadeInterface
     {
         return $this->getProvidedDependency(CommentMerchantPortalGuiDependencyProvider::FACADE_COMMENT);
     }
 
-    /**
-     * @return \Spryker\Zed\CommentMerchantPortalGui\Dependency\Facade\CommentMerchantPortalGuiToMerchantUserFacadeInterface
-     */
     public function getMerchantUserFacade(): CommentMerchantPortalGuiToMerchantUserFacadeInterface
     {
         return $this->getProvidedDependency(CommentMerchantPortalGuiDependencyProvider::FACADE_MERCHANT_USER);
     }
 
-    /**
-     * @return \Spryker\Zed\CommentMerchantPortalGui\Dependency\Facade\CommentMerchantPortalGuiToTranslatorFacadeInterface
-     */
     public function getTranslatorFacade(): CommentMerchantPortalGuiToTranslatorFacadeInterface
     {
         return $this->getProvidedDependency(CommentMerchantPortalGuiDependencyProvider::FACADE_TRANSLATOR);
     }
 
-    /**
-     * @return \Symfony\Component\Security\Csrf\CsrfTokenManagerInterface
-     */
     public function getCsrfTokenManager(): CsrfTokenManagerInterface
     {
         return $this->getProvidedDependency(CommentMerchantPortalGuiDependencyProvider::SERVICE_FORM_CSRF_PROVIDER);

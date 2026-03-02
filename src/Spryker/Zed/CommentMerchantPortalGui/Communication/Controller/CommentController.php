@@ -36,11 +36,6 @@ class CommentController extends AbstractController
      */
     protected const REQUEST_PARAMETER_TOKEN = '_token';
 
-    /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     */
     public function createAction(Request $request): JsonResponse
     {
         $tokenValue = (string)$request->get(static::REQUEST_PARAMETER_TOKEN);
@@ -68,11 +63,6 @@ class CommentController extends AbstractController
         ]);
     }
 
-    /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     */
     public function updateAction(Request $request): JsonResponse
     {
         $tokenValue = (string)$request->get(static::REQUEST_PARAMETER_TOKEN);
@@ -104,11 +94,6 @@ class CommentController extends AbstractController
         ]);
     }
 
-    /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     */
     public function deleteAction(Request $request): JsonResponse
     {
         $tokenValue = (string)$request->get(static::REQUEST_PARAMETER_TOKEN);
@@ -131,11 +116,6 @@ class CommentController extends AbstractController
         return $this->jsonResponse();
     }
 
-    /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *
-     * @return \Generated\Shared\Transfer\CommentRequestTransfer
-     */
     protected function createCommentRequestTransfer(Request $request): CommentRequestTransfer
     {
         $merchantUserTransfer = $this->getFactory()
@@ -152,11 +132,6 @@ class CommentController extends AbstractController
             ->setComment($commentTransfer);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\CommentThreadTransfer $commentThreadTransfer
-     *
-     * @return \Generated\Shared\Transfer\CommentTransfer
-     */
     protected function getLastComment(CommentThreadTransfer $commentThreadTransfer): CommentTransfer
     {
         $commentTransfers = $commentThreadTransfer->getComments()->getArrayCopy();
@@ -166,12 +141,6 @@ class CommentController extends AbstractController
         return $commentTransfer;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\CommentThreadTransfer $commentThreadTransfer
-     * @param string $commentUuid
-     *
-     * @return \Generated\Shared\Transfer\CommentTransfer|null
-     */
     protected function findCommentByUuid(CommentThreadTransfer $commentThreadTransfer, string $commentUuid): ?CommentTransfer
     {
         foreach ($commentThreadTransfer->getComments() as $commentTransfer) {
@@ -183,9 +152,6 @@ class CommentController extends AbstractController
         return null;
     }
 
-    /**
-     * @return string
-     */
     protected function createUpdateCommentFormCsrfToken(): string
     {
         return $this->getFactory()

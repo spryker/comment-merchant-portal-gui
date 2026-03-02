@@ -24,20 +24,11 @@ class CsrfTokenValidator implements CsrfTokenValidatorInterface
      */
     protected CsrfTokenManagerInterface $csrfTokenManager;
 
-    /**
-     * @param \Symfony\Component\Security\Csrf\CsrfTokenManagerInterface $csrfTokenManager
-     */
     public function __construct(CsrfTokenManagerInterface $csrfTokenManager)
     {
         $this->csrfTokenManager = $csrfTokenManager;
     }
 
-    /**
-     * @param string $tokenId
-     * @param string $value
-     *
-     * @return \Generated\Shared\Transfer\ValidationResponseTransfer
-     */
     public function validate(string $tokenId, string $value): ValidationResponseTransfer
     {
         $validationResponseTransfer = (new ValidationResponseTransfer())->setIsSuccess(true);
@@ -52,9 +43,6 @@ class CsrfTokenValidator implements CsrfTokenValidatorInterface
             ->setIsSuccess(false);
     }
 
-    /**
-     * @return \Generated\Shared\Transfer\MessageTransfer
-     */
     protected function createInvalidCsrfTokenErrorMessage(): MessageTransfer
     {
         return (new MessageTransfer())

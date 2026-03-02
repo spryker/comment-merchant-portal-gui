@@ -11,11 +11,5 @@ use Generated\Shared\Transfer\ValidationResponseTransfer;
 
 interface CsrfTokenValidatorInterface
 {
-    /**
-     * @param string $tokenId
-     * @param string $value
-     *
-     * @return \Generated\Shared\Transfer\ValidationResponseTransfer
-     */
     public function validate(string $tokenId, string $value): ValidationResponseTransfer;
 }
